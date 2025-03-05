@@ -39,10 +39,59 @@ const movieList = async(request, h) => {
         });
 
         const data = sendAPI.data;
-
+        let filteredResult;
+        
+        switch(UrlAddition) {
+            case 'now_playing':
+                filteredResult = {
+                    dates: data.dates,
+                    results: data.results.map(result => ({
+                        id: result.id, 
+                        title: result.title,
+                        overview: result.overview,
+                        release_date: result.release_date,
+                    }))
+                };
+                break;
+            case 'popular':
+                filteredResult = {
+                    results: data.results.map(result => ({
+                        id: result.id, 
+                        title: result.title,
+                        overview: result.overview,
+                        popularity: result.popularity,
+                        release_date: result.release_date,
+                    }))
+                };
+                break;
+            case 'top_rated':
+                filteredResult = {
+                    results: data.results.map(result => ({
+                        id: result.id, 
+                        title: result.title,
+                        overview: result.overview,
+                        vote_average: result.vote_average,
+                        vote_count: result.vote_count,
+                        release_date: result.release_date,
+                    }))
+                };
+                break;
+            case 'upcoming': 
+                filteredResult = {
+                    dates: data.dates,
+                    results: data.results.map(result => ({
+                        id: result.id, 
+                        title: result.title,
+                        overview: result.overview,
+                        release_date: result.release_date,
+                    }))
+                };
+                break;
+        };
+        
         const response = h.response({
             status: 'success',
-            result: data,
+            filteredResult,
         });
         response.code(200);
         return response;
